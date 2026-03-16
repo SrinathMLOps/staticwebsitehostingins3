@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS S3 + CloudFront Architecture - srinathkaithoju.com</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        
+        .layer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .component {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .component:hover {
+            transform: translateY(-5px);
+        }
+        
+        .component.user {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .component.route53 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .component.acm {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .component.cloudfront {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .component.s3 {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+        
+        .component-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .component-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .component-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .arrow {
+            font-size: 3em;
+            color: #3498db;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .flow-line {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .region-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-top: 10px;
+        }
+        
+        .steps {
+            background: #ecf0f1;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .steps h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ AWS Architecture Diagram</h1>
+        <div class="subtitle">srinathkaithoju.com - Static Website Hosting</div>
+        
+        <div class="architecture">
+            <!-- User Layer -->
+            <div class="layer">
+                <div class="component user">
+                    <div class="component-icon">👥</div>
+                    <div class="component-title">Users</div>
+                    <div class="component-desc">Global Visitors</div>
+                </div>
+            </div>
+            
+            <div class="flow-line">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- DNS Layer -->
+            <div class="layer">
+                <div class="component route53">
+                    <div class="component-icon">🌐</div>
+                    <div class="component-title">DNS Provider</div>
+                    <div class="component-desc">srinathkaithoju.com<br>CNAME → CloudFront</div>
+                </div>
+                
+                <div class="component acm">
+                    <div class="component-icon">🔒</div>
+                    <div class="component-title">AWS ACM</div>
+                    <div class="component-desc">SSL Certificate</div>
+                    <div class="region-badge">us-east-1</div>
+                </div>
+            </div>
+            
+            <div class="flow-line">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- CDN Layer -->
+            <div class="layer">
+                <div class="component cloudfront">
+                    <div class="component-icon">⚡</div>
+                    <div class="component-title">CloudFront CDN</div>
+                    <div class="component-desc">Global Edge Locations<br>HTTPS, Caching, DDoS Protection</div>
+                    <div class="region-badge">Global</div>
+                </div>
+            </div>
+            
+            <div class="flow-line">
+                <div class="arrow">↓</div>
+            </div>
+            
+            <!-- Storage Layer -->
+            <div class="layer">
+                <div class="component s3">
+                    <div class="component-icon">🪣</div>
+                    <div class="component-title">S3 Bucket</div>
+                    <div class="component-desc">srinathkaithoju.com<br>Static Website Files</div>
+                    <div class="region-badge">eu-west-2 (London)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="steps">
+            <h2>📋 Implementation Steps</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Create S3 Bucket</strong> - Name: srinathkaithoju.com, Region: eu-west-2, Disable block public access
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Upload Website Files</strong> - Upload index.html, CSS, JS, images folders
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Add Bucket Policy</strong> - Allow public read access (s3:GetObject)
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Enable Static Hosting</strong> - Set index.html as index document
+            </div>
+            
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Request SSL Certificate</strong> - Use ACM in us-east-1 for *.srinathkaithoju.com
+            </div>
+            
+            <div class="step">
+                <span class="step-number">6</span>
+                <strong>Create CloudFront Distribution</strong> - Origin: S3 bucket, Enable HTTPS redirect, Attach SSL
+            </div>
+            
+            <div class="step">
+                <span class="step-number">7</span>
+                <strong>Update DNS Records</strong> - Add CNAME records pointing to CloudFront distribution
+            </div>
+        </div>
+    </div>
+</body>
+</html>

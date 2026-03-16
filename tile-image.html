@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS S3 + CloudFront Tile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .tile-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+        }
+        
+        .tile {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tile::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .tile:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+        
+        .tile-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tile-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tile-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .tile-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .tile-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .tile-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tile-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .tile-features li::before {
+            content: '✓';
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin: 5px;
+        }
+        
+        .tile.variant-1 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .tile.variant-2 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .tile.variant-3 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tile-container">
+        <!-- Main Tile -->
+        <div class="tile">
+            <div class="tile-content">
+                <div class="tile-icon">☁️</div>
+                <div class="tile-title">AWS Hosting</div>
+                <div class="tile-subtitle">srinathkaithoju.com</div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <span class="badge">S3</span>
+                    <span class="badge">CloudFront</span>
+                    <span class="badge">ACM</span>
+                </div>
+                
+                <ul class="tile-features">
+                    <li>Global CDN Distribution</li>
+                    <li>HTTPS Encryption</li>
+                    <li>London Region (eu-west-2)</li>
+                    <li>Static Website Hosting</li>
+                    <li>99.99% Availability</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Architecture Tile -->
+        <div class="tile variant-1">
+            <div class="tile-content">
+                <div class="tile-icon">🏗️</div>
+                <div class="tile-title">Architecture</div>
+                <div class="tile-subtitle">Serverless & Scalable</div>
+                
+                <ul class="tile-features">
+                    <li>S3 Static Hosting</li>
+                    <li>CloudFront CDN</li>
+                    <li>SSL/TLS Certificate</li>
+                    <li>DNS Configuration</li>
+                    <li>Origin Access Control</li>
+                </ul>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-value">⚡</span>
+                        <span class="stat-label">Fast</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">🔒</span>
+                        <span class="stat-label">Secure</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">💰</span>
+                        <span class="stat-label">Cost-Effective</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Benefits Tile -->
+        <div class="tile variant-2">
+            <div class="tile-content">
+                <div class="tile-icon">🚀</div>
+                <div class="tile-title">Benefits</div>
+                <div class="tile-subtitle">Why This Stack?</div>
+                
+                <ul class="tile-features">
+                    <li>Low latency worldwide</li>
+                    <li>Automatic scaling</li>
+                    <li>DDoS protection</li>
+                    <li>Pay-as-you-go pricing</li>
+                    <li>High availability</li>
+                </ul>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-value">450+</span>
+                        <span class="stat-label">Edge Locations</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">99.99%</span>
+                        <span class="stat-label">Uptime SLA</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">&lt;100ms</span>
+                        <span class="stat-label">Response Time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tech Stack Tile -->
+        <div class="tile variant-3">
+            <div class="tile-content">
+                <div class="tile-icon">🛠️</div>
+                <div class="tile-title">Tech Stack</div>
+                <div class="tile-subtitle">AWS Services Used</div>
+                
+                <ul class="tile-features">
+                    <li>Amazon S3 (Storage)</li>
+                    <li>CloudFront (CDN)</li>
+                    <li>ACM (SSL Certificates)</li>
+                    <li>Route 53 (DNS - Optional)</li>
+                    <li>IAM (Access Control)</li>
+                </ul>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <div class="badge">🪣 S3 Bucket</div>
+                    <div class="badge">⚡ CloudFront</div>
+                    <div class="badge">🔐 SSL/TLS</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

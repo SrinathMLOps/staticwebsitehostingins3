@@ -1,0 +1,38 @@
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# AWS Credentials (NEVER commit these!)
+.aws/
+credentials
+config
+
+# Environment variables
+.env
+.env.local
+
+# Node modules (if using any build tools)
+node_modules/
+npm-debug.log*
+
+# Build outputs
+dist/
+build/
+*.zip
+
+# Backup files
+*.bak
+*.backup
